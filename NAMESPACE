@@ -1,0 +1,7 @@
+export("read.quality.filter", "read.size.freqs","reads.plots","GenotypeModel","M.allele.seq.variant","alleleFinder","M.allele.Finder","score.seq.variants","AlleleCum","getpoints",sampleDist)
+importFrom("stringr", "str_extract_all","str_extract","regex")
+importFrom("readr", "read_tsv","write_lines", "read_lines")
+importFrom("grDevices", "dev.off", "pdf", "rgb")
+importFrom("graphics", "abline", "axis", "hist", "locator", "par","points")
+importFrom("utils", "combn", "read.delim", "write.table")
+importFrom("Biostrings","reverseComplement","DNAString")
