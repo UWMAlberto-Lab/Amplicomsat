@@ -1,8 +1,8 @@
 Package: Amplicomsat
 Type: Package
 Title: Processes microsatellite genotypes from Amplicon generated fastq read files
-Version: 0.1.1
-Date: 2024-02-26
+Version: 0.1.11
+Date: 2024-02-28
 Author: Filipe Alberto
 Maintainer: Filipe Alberto <albertof@uwm.edu>
 Description: A series of functions that can all be wrapped sequentially in a single script to extract

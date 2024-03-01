@@ -1,5 +1,5 @@
 M.allele.Finder<-function(sampleDir="./samplesF.MA", locusInfo="primers",calibrationFiles="CalibrationSamples.txt",
-													coverageF=20,RefGenotypes="./GenotypesOut/Genotypes allele table.txt"){
+													coverageF=20,ReadSizesRepeatNumbers="./ReadSizesRepeatNumbers/",RefGenotypes="./GenotypesOut/Genotypes allele table.txt"){
 	
 	files<-list.files(sampleDir)
 	nfiles<-length(files)
@@ -39,14 +39,14 @@ M.allele.Finder<-function(sampleDir="./samplesF.MA", locusInfo="primers",calibra
 			
 			Homo.samples<-CalibrationFile[2:nrowsCalibration,p]
 			#Creating a reference relative allele frequency for an homozygous (using data from 6 homozygous samples, could be more)
-			DF.sample.read.msat.sizes<-readRDS(paste0("./ReadSizesRepeatNumbers/",Homo.samples[1],":",primers[p,1],".Rds")) 
+			DF.sample.read.msat.sizes<-readRDS(paste0(ReadSizesRepeatNumbers,Homo.samples[1],":",primers[p,1],".Rds")) 
 			tableRef<-table(DF.sample.read.msat.sizes$ReadSize)
 			maxRef<-as.numeric(names(tableRef)[which.max(tableRef)])
 			CombFreqs<-DF.sample.read.msat.sizes$ReadSize
 			
 			if(length(Homo.samples)>1){
 				for(h in 2:length(Homo.samples)){
-					DF.sample.read.msat.sizes<-readRDS(paste0("./ReadSizesRepeatNumbers/",Homo.samples[h],":",primers[p,1],".Rds"))
+					DF.sample.read.msat.sizes<-readRDS(paste0(ReadSizesRepeatNumbers,Homo.samples[h],":",primers[p,1],".Rds"))
 					tableTemp<-table(DF.sample.read.msat.sizes$ReadSize)
 					maxTemp<-as.numeric(names(tableTemp)[which.max(tableTemp)])
 					CombFreqs<-c(CombFreqs,(DF.sample.read.msat.sizes$ReadSize+(maxRef-maxTemp)))
@@ -63,7 +63,7 @@ M.allele.Finder<-function(sampleDir="./samplesF.MA", locusInfo="primers",calibra
 			RefMax.Index<-which.max(RefFreq.DF$Freq)
 			RefFreq.DF$Rel.Freq<-RefFreq.DF$Freq/sum(RefFreq.DF$Freq)
 			
-			DF.sample.read.msat.sizes<-readRDS(paste0("./ReadSizesRepeatNumbers/",files[f],":",primers[p,1],".Rds")) 
+			DF.sample.read.msat.sizes<-readRDS(paste0(ReadSizesRepeatNumbers,files[f],":",primers[p,1],".Rds")) 
 			
 			tableFreqs<-table(DF.sample.read.msat.sizes$ReadSize)
 			all.Obs.TableFreq<-as.numeric(names(tableFreqs))
@@ -150,7 +150,7 @@ M.allele.Finder<-function(sampleDir="./samplesF.MA", locusInfo="primers",calibra
 		#plots
 		pdf(file=paste0("Multiallelic plots for sample ",files[f],".pdf"),height=6,width=12)
 		for(p in 1:nprimers){
-			DF.sample.read.msat.sizes<-readRDS(paste0("./ReadSizesRepeatNumbers/",files[f],":",primers[p,1],".Rds")) 
+			DF.sample.read.msat.sizes<-readRDS(paste0(ReadSizesRepeatNumbers,files[f],":",primers[p,1],".Rds")) 
 			xlimits<-range(DF.sample.read.msat.sizes$ReadSize)
 			
 			hist(DF.sample.read.msat.sizes$ReadSize,breaks=seq(xlimits[1],xlimits[2],1),xlim=c(xlimits[1],xlimits[2]),axes=F,

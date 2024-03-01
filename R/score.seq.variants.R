@@ -1,6 +1,7 @@
 score.seq.variants<-function(locusInfo="primers",RefGenotypes,sampleDir="./samplesF",nmotif=2,
 														 HeteroThreshold=0.4,alleleDB=NULL,coverageF=25){
 
+	if(length(coverageF)==1){coverageF<-rep(coverageF,nprimers)}
 	system2("mkdir","AlleleBySeq")
 	Genotypes<-read.delim(RefGenotypes)
 	Genotypes.by.SEQ<-Genotypes
@@ -53,7 +54,7 @@ ALLELE.DATABASE<-alleleDB
       ReadsGene1<-Reads.bothPrimers.motif[ReadSize==Genes[g]]
       ReadsCount1<-table( ReadsGene1)
       ReadsCount1.MAX<- max(ReadsCount1)
-      if(ReadsCount1.MAX<coverageF)next
+      if(ReadsCount1.MAX<coverageF[p])next
       index.HighFreq<-as.numeric(which((ReadsCount1/ReadsCount1.MAX)>HeteroThreshold))# the length of this object is the number of different sequences that have sufficient counts to be cosidered true homoplasy alleles
      Nvariants<-length(index.HighFreq)
    

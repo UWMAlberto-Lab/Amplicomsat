@@ -8,8 +8,9 @@ The function searches samples for multiple alleles of the same loci. Examples of
 }
 \usage{
 M.allele.Finder(sampleDir="./samplesF.MA", locusInfo="primers",
-                calibrationFiles="CalibrationSamples.txt",coverageF=20,
-                RefGenotypes="./GenotypesOut/Genotypes allele table.txt")
+               calibrationFiles="CalibrationSamples.txt",coverageF=20,
+               ReadSizesRepeatNumbers="./ReadSizesRepeatNumbers/",
+               RefGenotypes="./GenotypesOut/Genotypes allele table.txt")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,7 +47,10 @@ and can be copied from there when selecting homozygote samples. I used six sampl
 Reads scored as alleles based on the sum of squares minimization method need to have coverage larger than this value, otherwise are written 
 as missing data NA. Defaults to coverage of 20. It is possible to send a vector with different values for each locus. You can input a single value 
 if you want to use the same coverage threshold filter for all loci .
-  }
+}
+\item{ReadSizesRepeatNumbers}{
+The path to the folder with the same name created by function \code{\link{read.size.freqs}}.
+}
  \item{RefGenotypes}{
 A string with the path for the reference file genotype file in the 2 columns per locus format. The format is the same as produced by function
 \code{\link{alleleFinder}} and thus the default path is the folder where that file is written by this function "./GenotypesOut/Genotypes allele table.txt". Only alleles present in the reference population can be found.
@@ -56,7 +60,7 @@ A string with the path for the reference file genotype file in the 2 columns per
 The function searches for the presence of alleles, from those present in the reference population, in samples that may have up to n alleles. Examples of such samples come from forensic analysis where DNA from multiple multiple individuals might be present or eDNA samples containing alleles from several individuals.
 }
 \value{
-A list with the alleles found for each locus and individual.
+The function returns to the working environment a list with the alleles found for each locus and individual. The function also prints to the working directory a pdf file for each sample containing plots of read (allele) distribution, with separate plots per page showing the different loci, and red vertical lines indicating the alleles scored.
 }
 \references{
 Alberto F (in prep)...

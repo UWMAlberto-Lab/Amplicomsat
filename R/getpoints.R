@@ -6,6 +6,8 @@ getpoints<-function(GenotypeA.DF,locus){
     c1<-LocusData[,1]>=y.limits[1] & LocusData[,1]<=y.limits[2] 
     c2<-LocusData[,2]>=y.limits[1] & LocusData[,2]<=y.limits[2] 
     c3<-c1 | c2
-    GenotypeA.DF[c3,c(1,LocusColumns)]
+    GenotypeA.DF<-GenotypeA.DF[c3,c(1,LocusColumns)]
+    GenotypeA.DF<-GenotypeA.DF<-GenotypeA.DF[!is.na(GenotypeA.DF[,2]),]
+    GenotypeA.DF
   }
 
