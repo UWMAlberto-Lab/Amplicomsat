@@ -4,8 +4,6 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 	nprimers<-nrow(primers)
 	if(length(coverageF)==1){coverageF<-rep(coverageF,nprimers)}
 	
-	
-	
 	allele.DB<-read.delim(alleleDB)
 	allele.DB$Locus<-factor(allele.DB$Locus,levels=primers[,1])
 	Original.DB.size<-nrow(allele.DB)
@@ -51,7 +49,7 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 				reads.A<-Reads.bothPrimers.motif[ReadSize==Alleles.by.Size[a]]
 				Table.reads.A<-table(reads.A)
 				Table.reads.A.max<-max(Table.reads.A)
-				if(Table.reads.A.max<coverageF[p])next
+				if(sum(Table.reads.A)<coverageF[p])next
 				#if(Table.reads.A.max<coverageF)next
 				index.HighFreq<-as.numeric(which((Table.reads.A/Table.reads.A.max)>HeteroThreshold))# the length of this object is the number of different sequences that have sufficient counts to be cosidered true homoplasy alleles
 				Nvariants<-length(index.HighFreq) #how many variants
@@ -94,8 +92,10 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 						o1<-order(allele.DB$Locus,allele.DB$SIZE,allele.DB$VARIANT) #reordering by locus and size, Allele codes won't be ordered in a logical way so that they are kept among different databases
 						allele.DB<-allele.DB[o1,]
 						write.table(New.DB.entries,file="DataBase new entries.txt",append=TRUE,sep="\t",row.names=FALSE,quote=F,col.names=F)
+						SEQ.ALLELES<-c(SEQ.ALLELES, paste0(Alleles.by.Size[a],	letters[letterINDEX]))
+						}else{
+					    SEQ.ALLELES<-c(SEQ.ALLELES, paste0(alleleDB.Locus.Size$SIZE[DB.index],	alleleDB.Locus.Size$VARIANT[DB.index]))
 					}
-					SEQ.ALLELES<-c(SEQ.ALLELES, paste0(alleleDB.Locus.Size$SIZE[DB.index],	alleleDB.Locus.Size$VARIANT[DB.index]))
 				}
 				SEQ.ALLELES<-unique(SEQ.ALLELES)
 			}
