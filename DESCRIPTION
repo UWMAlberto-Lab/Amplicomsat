@@ -1,0 +1,12 @@
+Package: Amplicomsat
+Type: Package
+Title: Processes microsatellite genotypes from Amplicon generated fastq read files
+Version: 0.3.01
+Date: 2025-02-02
+Author: Filipe Alberto
+Maintainer: Filipe Alberto <albertof@uwm.edu>
+Description: A series of functions that can all be wrapped sequentially in a single script to extract
+            microsatellite genotypes from fastq files with Ampicon sequencing reads. It can extract
+             mutiple alleles per sample loci combinations and identify sequence variant alleles.            
+Imports: stringr, readr, Biostrings
+License: GPL (>=2)
