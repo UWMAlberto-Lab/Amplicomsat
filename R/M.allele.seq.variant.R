@@ -60,7 +60,6 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 				#if(Table.reads.A.max<coverageF)next
 				index.HighFreq<-as.numeric(which((Table.reads.A/Table.reads.A.max)>HeteroThreshold))# the length of this object is the number of different sequences that have sufficient counts to be cosidered true homoplasy alleles
 				Nvariants<-length(index.HighFreq) #how many variants
-				#MainSeqs<-reads.A[index.HighFreq] #this could be one or more. #FOUND MAJOR ERROR HERE, the index was being applied to the full vector of reads instead of the unique ones!!!!----
 				MainSeqs<-names(Table.reads.A)[index.HighFreq] 
 				
 				alleleDB.Locus.Size<-allele.DB[allele.DB$Locus==primers[p,1] &  allele.DB$SIZE==Alleles.by.Size[a], ] #retrieving the sequences in the database for this locus and allele size
