@@ -17,7 +17,7 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 	
 	SEQ.ALLELES.Samples<-NULL
 	
-	for(s in 1:nsamples){
+	for(s in 1:nsamples){    #
 		
 		SEQ.ALLELES.Loci<-NULL
 		
@@ -54,23 +54,27 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 				reads.A<-Reads.bothPrimers.motif[ReadSize==Alleles.by.Size[a]]
 				Table.reads.A<-table(reads.A)
 				Table.reads.A.max<-max(Table.reads.A)
-				if(sum(Table.reads.A)<as.numeric(coverageF[p]))next  #This might have been the problem!
+				if(sum(Table.reads.A)<as.numeric(coverageF[p])){#print(paste0("skipped allele: ",Alleles.by.Size[a],"; Coverage: ",Table.reads.A.max ))
+																															next}  #this controls coverage filtering
+			#}
 				#if(Table.reads.A.max<coverageF)next
 				index.HighFreq<-as.numeric(which((Table.reads.A/Table.reads.A.max)>HeteroThreshold))# the length of this object is the number of different sequences that have sufficient counts to be cosidered true homoplasy alleles
 				Nvariants<-length(index.HighFreq) #how many variants
-				MainSeqs<-reads.A[index.HighFreq] #this could be one or more
+				#MainSeqs<-reads.A[index.HighFreq] #this could be one or more. #FOUND MAJOR ERROR HERE, the index was being applied to the full vector of reads instead of the unique ones!!!!----
+				MainSeqs<-names(Table.reads.A)[index.HighFreq] 
+				
 				alleleDB.Locus.Size<-allele.DB[allele.DB$Locus==primers[p,1] &  allele.DB$SIZE==Alleles.by.Size[a], ] #retrieving the sequences in the database for this locus and allele size
 				AlleleCodeMax<-max(allele.DB$AlleleCode[allele.DB$Locus==primers[p,1]])
 				
 				# if no sequences are retrieved for that size in that loci write new variant and write to log file
 				if(nrow(alleleDB.Locus.Size)==0){
 					New.DB.entries<-data.frame(Locus=rep(primers[p,1],Nvariants),
-							 SIZE=rep(Alleles.by.Size[a],Nvariants),
-							 VARIANT=letters[(nrow(alleleDB.Locus.Size)+1):(nrow(alleleDB.Locus.Size)+Nvariants)],
-							AlleleCode=(AlleleCodeMax+1):(AlleleCodeMax+Nvariants),
-							Type=rep("New allele size",Nvariants),
-							Sample=rep(samples[s],Nvariants),
-							SEQ=MainSeqs)
+																		 SIZE=rep(Alleles.by.Size[a],Nvariants),
+																		 VARIANT=letters[(nrow(alleleDB.Locus.Size)+1):(nrow(alleleDB.Locus.Size)+Nvariants)],
+																		 AlleleCode=(AlleleCodeMax+1):(AlleleCodeMax+Nvariants),
+																		 Type=rep("New allele size",Nvariants),
+																		 Sample=rep(samples[s],Nvariants),
+																		 SEQ=MainSeqs)
 					allele.DB<-rbind(allele.DB,New.DB.entries[,c(1:4,7)])
 					
 					o1<-order(allele.DB$Locus,allele.DB$SIZE,allele.DB$VARIANT) #reordering by locus and size, Allele codes won't be ordered in a logical way so that they are kept among different databases
@@ -85,12 +89,12 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 					if(length(DB.index)==0){        #if allele size exists but not the variant
 						AlleleCodeMax<-AlleleCodeMax+1
 						New.DB.entries<-data.frame(Locus=primers[p,1],
-							 SIZE=Alleles.by.Size[a],
-							VARIANT=letters[letterINDEX],
-							AlleleCode=AlleleCodeMax,
-							Type=rep("New Sequence variant"),
-							Sample=samples[s],
-							SEQ=MainSeqs[v])
+																			 SIZE=Alleles.by.Size[a],
+																			 VARIANT=letters[letterINDEX],
+																			 AlleleCode=AlleleCodeMax,
+																			 Type=rep("New Sequence variant"),
+																			 Sample=samples[s],
+																			 SEQ=MainSeqs[v])
 						allele.DB<-rbind(allele.DB,New.DB.entries[,c(1:4,7)])
 						letterINDEX<-(letterINDEX+1)
 						
@@ -98,8 +102,8 @@ M.allele.seq.variant<-function(sampleDir="./samplesF.MA",AlleleList,locusInfo,al
 						allele.DB<-allele.DB[o1,]
 						write.table(New.DB.entries,file="DataBase new entries.txt",append=TRUE,sep="\t",row.names=FALSE,quote=F,col.names=F)
 						SEQ.ALLELES<-c(SEQ.ALLELES, paste0(Alleles.by.Size[a],	letters[letterINDEX]))
-						}else{
-					    SEQ.ALLELES<-c(SEQ.ALLELES, paste0(alleleDB.Locus.Size$SIZE[DB.index],	alleleDB.Locus.Size$VARIANT[DB.index]))
+					}else{
+						SEQ.ALLELES<-c(SEQ.ALLELES, paste0(alleleDB.Locus.Size$SIZE[DB.index],	alleleDB.Locus.Size$VARIANT[DB.index]))
 					}
 				}
 				SEQ.ALLELES<-unique(SEQ.ALLELES)
